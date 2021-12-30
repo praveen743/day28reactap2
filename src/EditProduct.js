@@ -1,32 +1,53 @@
 import react from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react/cjs/react.development";
 
-export default function CreateProduct(){
+
+export default function EditProduct(){
+    let params = useParams()
+    console.log(params);
     const formik = useFormik({
         initialValues:{
             productname:"",
             price:"",
-            brand:""
+            brand:"",
+             
         },
-        onSubmit :async values =>{
-        try {
-            await fetch('https://61c19a1d9dbcca0017c81fce.mockapi.io/products',{
-            method:"POST",
-            body: JSON.stringify(values),
-            headers:{
-                "content-type":"application/json"
+        onSubmit: async values => {
+            try {
+                await fetch( `https://61c19a1d9dbcca0017c81fce.mockapi.io/products/${params.id}`,{
+                    method:"PUT",
+                    body: JSON.stringify(values),
+                    headers:{
+                        "content-type":"application/json"
+                    }
+                })
+                alert("data saved")
+            } 
+            catch (error) {
+                console.log(error)
             }
-        })
-        alert("data saved")
+            
+        }
+    })
+
+    
+
+    useEffect(async ()=>{
+        try {
+           let userdata= await fetch(`https://61c19a1d9dbcca0017c81fce.mockapi.io/products/${params.id}`)
+           let user = await userdata.json()
+           formik.setValues(user)
         } catch (error) {
             console.log(error)
         }
-        }
-    })
+      
+    },[])
     return(
          <>
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Product Create</h1>
+                        <h1 class="h3 mb-0 text-gray-800">User Create</h1>
                          
                     </div>
 
@@ -38,16 +59,14 @@ export default function CreateProduct(){
                                 <input type="text" className="form-control"
                                 onChange={formik.handleChange}
                                 name="productname"
-                                value={formik.values.productname}
-                                /> 
+                                value={formik.values.productname}/> 
                             </div>
                             <div className="col-lg-6">
                                 <label>Price</label>
-                                <input type="number" className="form-control"
+                                <input type="text" className="form-control"
                                 onChange={formik.handleChange}
                                 name="price"
-                                value={formik.values.price}
-                                /> 
+                                value={formik.values.price}/> 
                             </div>
                         </div>
                         <div className="row mt-3">
@@ -56,12 +75,10 @@ export default function CreateProduct(){
                                 <input type="text" className="form-control"
                                 onChange={formik.handleChange}
                                 name="brand"
-                                value={formik.values.brand}
-                                /> 
+                                value={formik.values.brand}/> 
+                            </div>
                             </div>
                              
-                        </div>
-                        
                         <div className="row mt-3">
                         <div className="col-lg-6">
                                  
@@ -75,4 +92,3 @@ export default function CreateProduct(){
     )
     
 }
- 

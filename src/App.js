@@ -9,7 +9,8 @@ import {BrowserRouter,Routes,Route} from "react-router-dom";
 import CreateUser from './CreateUser';
 import ProductList from './ProductList';
 import CreateProduct from './CreateProduct';
- 
+import EditUser from './EditUser';
+import EditProduct from './EditProduct';
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
               <Route path="/Product" element={<ProductList/>}></Route>
               <Route path="/user-create" element={<CreateUser/>}></Route>
               <Route path="/Product-create" element={<CreateProduct/>}></Route>
+              <Route path="/Edit-user/:id" element={<EditUser/>}></Route>
+              <Route path="/edit-product/:id" element={<EditProduct/>}></Route>
 
             </Routes>
           </div>

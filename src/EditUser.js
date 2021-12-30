@@ -1,8 +1,12 @@
-import react from "react";
+ import react from "react";
 import { useFormik } from "formik";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react/cjs/react.development";
 
 
-export default function CreateUser(){
+export default function EditUser(){
+    let params = useParams()
+    console.log(params);
     const formik = useFormik({
         initialValues:{
             name:"",
@@ -14,8 +18,8 @@ export default function CreateUser(){
         },
         onSubmit: async values => {
             try {
-                await fetch('https://61c19a1d9dbcca0017c81fce.mockapi.io/users',{
-                    method:"post",
+                await fetch( `https://61c19a1d9dbcca0017c81fce.mockapi.io/users/${params.id}`,{
+                    method:"PUT",
                     body: JSON.stringify(values),
                     headers:{
                         "content-type":"application/json"
@@ -29,6 +33,17 @@ export default function CreateUser(){
             
         }
     })
+
+    useEffect(async ()=>{
+        try {
+           let userdata= await fetch(`https://61c19a1d9dbcca0017c81fce.mockapi.io/users/${params.id}`)
+           let user = await userdata.json()
+           formik.setValues(user)
+        } catch (error) {
+            console.log(error)
+        }
+      
+    },[])
     return(
          <>
          <div class="d-sm-flex align-items-center justify-content-between mb-4">

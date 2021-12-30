@@ -1,6 +1,41 @@
-import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react/cjs/react.development";
+  
 export default function ProductList() {
+     
+const[product,setproduct] = useState([])
+useEffect(async()=>{
+    load()
+},[])
+
+    async function load(){
+        let productdata= await fetch('https://61c19a1d9dbcca0017c81fce.mockapi.io/products')
+        let jproduct = await productdata.json()
+        setproduct(jproduct)
+
+    }
+
+    async function  DeleteProduct(id) {
+        
+            try {
+                await fetch( `https://61c19a1d9dbcca0017c81fce.mockapi.io/products/${id}`,{
+                    method:"DELETE",
+                     
+                    headers:{
+                        "content-type":"application/json"
+                    }
+                })
+                alert("data deleted")
+                load()
+                
+            } 
+            catch (error) {
+                console.log(error)
+            }
+            
+                  
+    }
     return (
         <>
          <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -33,22 +68,19 @@ export default function ProductList() {
                                              </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>T-shirt</td>
-                                            <td>Rs.500</td>
-                                            <td>Roadster</td>
-                                             
-                                            <button className="btn btn-primary btn-sm">Edit</button>
-                                            <button className="btn btn-danger btn-sm">Delete</button>
-                                        </tr>
-                                        <tr>
-                                        <td>T-shirt</td>
-                                            <td>Rs.500</td>
-                                            <td>Roadster</td>
-                                             
-                                            <button className="btn btn-primary btn-sm">Edit</button>
-                                            <button className="btn btn-danger btn-sm">Delete</button>
-                                        </tr>
+                                        {
+                                            product.map((obj,index)=>{
+                                                return <tr key={index}>
+                                                <td>{obj.productname}</td>
+                                                    <td> {obj.price}</td>
+                                                    <td> {obj.brand}</td>
+                                                     
+                                                    <td><Link to={`/edit-product/${obj.id}`}><button className="btn btn-primary btn-sm">Edit</button></Link>
+                                                    <button onClick={()=>DeleteProduct(obj.id)} className="btn btn-danger btn-sm">Delete</button></td>
+                                                </tr>
+                                            })
+                                        }
+                                         
                                          
                                          
                                     </tbody>
